@@ -1,0 +1,43 @@
+# Default server - remove if a default server is already present
+server {
+	listen 80 default_server;
+	listen [::]:80 default_server;
+
+	server_name _;
+	return 404;
+}
+
+# Main subdomain
+server {
+	listen 80;
+	listen [::]:80;
+
+	root /var/www/get-ip;
+	index index.php;
+
+	server_name getip.your-domain.tld;
+
+	location / {
+		try_files $uri $uri/ =404;
+	}
+
+	location ~ .php$ {
+		include snippets/fastcgi-php.conf;
+		fastcgi_pass unix:/var/run/php/php7.3-fpm.sock;
+	}
+}
+
+# Specific protocol only subdomain
+server {
+	listen 80;
+	listen [::]:80;
+
+	server_name ipv4.your-domain.tld ipv6.your-domain.tld;
+
+	add_header 'Access-Control-Allow-Origin' '*';
+
+	location / {
+		default_type text/plain;
+		return 200 $remote_addr;
+	}
+}
