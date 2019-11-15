@@ -1,8 +1,12 @@
 <?php
 
 $ip_address = $_SERVER['REMOTE_ADDR'];
-$protocol_to_try = filter_var($ip_address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ? '6' : '4';
-$current_protocol = filter_var($ip_address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ? '4' : '6';
+$protocol_to_try = '4';
+$current_protocol = '6';
+if(filter_var($ip_address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+	$protocol_to_try = '6';
+	$current_protocol = '4';
+}
 
 ?>
 <!DOCTYPE html>
